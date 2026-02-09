@@ -660,14 +660,14 @@
 
         function renderGrids() {
             ['documental', 'arquitectura', 'exposiciones', 'audiovisual', 'productos'].forEach(cat => {
-                const grid = document.getElementById(`grid-${cat}`);
+                const grid = document.getElementById(grid-${cat});
                 if(grid) grid.innerHTML = "";
             });
 
             Object.keys(projectsData).forEach(id => {
                 const p = projectsData[id];
-                const grid = document.getElementById(`grid-${p.category}`);
-                if(grid) { grid.innerHTML += `<div class="item" onclick="openProject('${id}')"><div class="image-container"><img src="${p.thumb}" loading="lazy"></div><p class="caption">${p.title}</p></div>`; }
+                const grid = document.getElementById(grid-${p.category});
+                if(grid) { grid.innerHTML += <div class="item" onclick="openProject('${id}')"><div class="image-container"><img src="${p.thumb}" loading="lazy"></div><p class="caption">${p.title}</p></div>; }
             });
         }
 
@@ -682,8 +682,8 @@
                 createSlider(content, "main", p.images);
             } else if(p.type === 'series') {
                 p.series.forEach((s, i) => {
-                    content.innerHTML += `<h4 class="series-subtitle">${s.subtitle}</h4>`;
-                    createSlider(content, `s-${i}`, s.images);
+                    content.innerHTML += <h4 class="series-subtitle">${s.subtitle}</h4>;
+                    createSlider(content, s-${i}, s.images);
                 });
             } else if(p.type === 'video') {
                 const vWrap = document.createElement('div');
@@ -697,9 +697,9 @@
         function createSlider(parent, sid, imgs) {
             const container = document.createElement('div'); container.className = 'slider-container';
             const wrap = document.createElement('div'); wrap.className = 'slider-wrapper';
-            wrap.innerHTML = `<div class="slider-track" id="tr-${sid}">${imgs.map(img => `<div class="slide"><img src="${img}" loading="lazy"></div>`).join('')}</div>`;
+            wrap.innerHTML = <div class="slider-track" id="tr-${sid}">${imgs.map(img => `<div class="slide"><img src="${img}" loading="lazy"></div>).join('')}</div>`;
             const ui = document.createElement('div'); ui.className = 'slider-ui';
-            ui.innerHTML = `<button class="slider-btn" onclick="moveSlide('${sid}', -1)">Anterior</button><div class="slider-counter"><span id="c-${sid}">1</span> / ${imgs.length}</div><button class="slider-btn" onclick="moveSlide('${sid}', 1)">Siguiente</button>`;
+            ui.innerHTML = <button class="slider-btn" onclick="moveSlide('${sid}', -1)">Anterior</button><div class="slider-counter"><span id="c-${sid}">1</span> / ${imgs.length}</div><button class="slider-btn" onclick="moveSlide('${sid}', 1)">Siguiente</button>;
             container.appendChild(wrap); container.appendChild(ui); parent.appendChild(container);
             sliderStates[sid] = { curr: 0, total: imgs.length };
         }
@@ -707,8 +707,8 @@
         window.moveSlide = (sid, dir) => {
             const s = sliderStates[sid]; if(!s) return;
             s.curr = Math.max(0, Math.min(s.total - 1, s.curr + dir));
-            document.getElementById(`tr-${sid}`).style.transform = `translateX(-${s.curr * 100}%)`;
-            document.getElementById(`c-${sid}`).innerText = s.curr + 1;
+            document.getElementById(tr-${sid}).style.transform = translateX(-${s.curr * 100}%);
+            document.getElementById(c-${sid}).innerText = s.curr + 1;
         };
 
         function closeProject() { goToHome(); }
