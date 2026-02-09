@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedro Pablo Stevenson Vergara — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F8F8F8; 
+            --text: #1A1A1A;
+            --text-light: #666666;
+            --text-extra-light: #AAAAAA; 
+            --accent: #333333;
+            --brand-orange: #FF5E00;
+            --transition-ui: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            --main-padding: 8px; 
+            --grid-gap: 8px; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* --- Landing Page --- */
+        #landing-page {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3000;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #000;
+            transition: transform 1.2s cubic-bezier(0.86, 0, 0.07, 1), opacity 0.8s ease;
+        }
+
+        .landing-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://i.postimg.cc/T32Sw6gQ/92.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.7;
+        }
+
+        .landing-bg::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.12) 0.5px, transparent 0.5px);
+            background-size: 3px 3px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        #landing-page.hidden { transform: translateY(-100%); pointer-events: none; }
+
+        .landing-content {
+            position: relative; z-index: 10; text-align: center; color: white;
+            cursor: pointer; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .landing-content h1 {
+            font-weight: 300; 
+            font-size: clamp(0.5rem, 1.2vw, 0.85rem); 
+            letter-spacing: 0.25em;
+            text-transform: lowercase;
+            opacity: 0.9;
+            transition: var(--transition-ui);
+        }
+
+        .landing-content:hover h1 {
+            color: var(--brand-orange);
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 30px var(--main-padding); z-index: 2000;
+            pointer-events: none;
+            transition: padding 0.4s ease;
+        }
+
+        header.scrolled {
+            padding: 15px var(--main-padding);
+            background: rgba(248, 248, 248, 0.95);
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+        }
+
+        header > * { pointer-events: auto; }
+        .logo { font-weight: 800; font-size: 0.8rem; letter-spacing: 0.05em; cursor: pointer; text-transform: uppercase; white-space: nowrap; }
+        
+        nav ul { display: flex; gap: 18px; list-style: none; align-items: center; }
+        .nav-link {
+            text-decoration: none; color: inherit; font-size: 0.55rem;
+            text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.4; 
+            transition: var(--transition-ui); cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active { opacity: 1; color: var(--brand-orange); }
+
+        /* --- Main Content --- */
+        main { padding: 120px var(--main-padding) 60px; max-width: 100%; margin: 0 auto; }
+        .view-content { display: none; opacity: 0; }
+        .view-content.active-view { display: block; opacity: 1; animation: fadeIn 0.8s ease forwards; }
+        
+        section { margin-bottom: 80px; scroll-margin-top: 120px; }
+        
+        .section-header { margin-bottom: 15px; }
+        .section-header h2 {
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em;
+            font-weight: 700; color: var(--text-light); opacity: 0.6;
+        }
+
+        .hero-intro { 
+            max-width: 100%; 
+            margin-bottom: 80px; 
+            padding: 0 4px; 
+        }
+        .hero-intro h1 { 
+            font-weight: 200; 
+            font-size: clamp(1.1rem, 2.9vw, 2.6rem); 
+            letter-spacing: -0.04em; 
+            line-height: 1.1; 
+            margin-bottom: 10px; 
+            white-space: normal;
+        }
+        .hero-intro .en { color: var(--text-light); opacity: 0.5; }
+
+        /* --- Grid Principal --- */
+        .editorial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--grid-gap); width: 100%; }
+        .item { cursor: pointer; margin-bottom: 24px; text-decoration: none; color: inherit; display: block; }
+        .image-container { background-color: #EEE; overflow: hidden; aspect-ratio: 4/5; margin-bottom: 8px; }
+        .image-container img { width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease; }
+        
+        .item:hover img { transform: none; filter: brightness(0.95); }
+        
+        .caption { 
+            display: block;
+            font-size: 0.55rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.12em; 
+            color: var(--text-light); 
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .item:hover .caption { color: var(--brand-orange); }
+
+        /* --- Project Views --- */
+        .back-link { cursor: pointer; font-size: 0.6rem; text-transform: uppercase; margin-bottom: 40px; opacity: 0.5; display: inline-flex; letter-spacing: 0.1em; font-weight: 700; }
+        .back-link:hover { opacity: 1; color: var(--brand-orange); }
+        .project-header { max-width: 1000px; margin-bottom: 60px; padding: 0 4px; }
+        .project-header h3 { font-size: clamp(1.8rem, 5vw, 3.5rem); font-weight: 200; margin-bottom: 30px; letter-spacing: -0.02em; }
+        .text-bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .text-bilingual p { font-size: 1rem; font-weight: 300; line-height: 1.6; margin-bottom: 20px; text-align: justify; white-space: pre-line; }
+        .text-bilingual .en { color: var(--text-light); }
+
+        /* --- Slider Visuals --- */
+        .series-subtitle { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 20px; color: var(--text-light); margin-top: 60px; text-align: center; }
+        .slider-container { position: relative; margin-bottom: 40px; }
+        .slider-wrapper { 
+            position: relative; width: 100%; height: 80vh; display: flex; 
+            overflow: hidden; background: transparent; 
+            touch-action: pan-y;
+        }
+        .slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .slide { min-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+        .slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        .slider-ui { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 50px; 
+            padding: 20px 0; 
+            margin-top: 10px;
+        }
+        .slider-btn { background: none; border: none; font-family: inherit; font-size: 0.55rem; text-transform: uppercase; cursor: pointer; opacity: 0.4; letter-spacing: 0.15em; transition: 0.3s; }
+        .slider-btn:hover { opacity: 1; color: var(--brand-orange); }
+        .slider-counter { font-size: 0.6rem; letter-spacing: 0.1em; opacity: 0.6; min-width: 60px; text-align: center; }
+
+        .video-wrapper {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- Info & Contact --- */
+        .info-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+        .info-image img { width: 100%; height: auto; grayscale: 100%; transition: grayscale 0.5s; }
+        .info-image:hover img { grayscale: 0%; }
+        .contact-link { font-size: 1.5rem; font-weight: 200; color: var(--brand-orange); text-decoration: none; display: block; margin-top: 20px; }
+        .insta-link { color: var(--brand-orange); text-decoration: none; transition: opacity 0.3s; }
+        .insta-link:hover { opacity: 0.7; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1024px) {
+            .editorial-grid { grid-template-columns: repeat(2, 1fr); }
+            nav ul { gap: 10px; }
+        }
+
+        @media (max-width: 768px) {
+            :root { --main-padding: 4px; --grid-gap: 8px; }
+            .editorial-grid { grid-template-columns: 1fr; }
+            header { background: var(--bg); padding: 15px var(--main-padding); pointer-events: auto; flex-direction: column; gap: 10px; }
+            .logo { font-size: 0.7rem; }
+            nav ul { gap: 8px; flex-wrap: wrap; justify-content: center; }
+            .hero-intro h1 { 
+                font-size: 1.6rem; 
+                letter-spacing: -0.02em;
+            }
+            .info-layout { grid-template-columns: 1fr; }
+            .slider-ui { gap: 30px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="landing-page" onclick="enterSite()">
+        <div class="landing-bg"></div>
+        <div class="landing-content">
+            <h1>pedro pablo stevenson vergara</h1>
+        </div>
+    </div>
+
+    <header id="main-header">
+        <div class="logo" onclick="goToHome()">Pedro Pablo Stevenson Vergara</div>
+        <nav>
+            <ul>
+                <li><a onclick="scrollOrGoHome('documental')" class="nav-link">Documental</a></li>
+                <li><a onclick="scrollOrGoHome('arquitectura')" class="nav-link">Arquitectura</a></li>
+                <li><a onclick="scrollOrGoHome('exposiciones')" class="nav-link">Exposiciones</a></li>
+                <li><a onclick="scrollOrGoHome('audiovisual')" class="nav-link">Audiovisual</a></li>
+                <li><a onclick="scrollOrGoHome('productos')" class="nav-link">Productos</a></li>
+                <li><a onclick="switchView('info-view')" class="nav-link">Info</a></li>
+                <li><a onclick="switchView('contacto-view')" class="nav-link">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div id="home-view" class="view-content active-view">
+            <div class="hero-intro">
+                <h1>Fotógrafo y realizador audiovisual documental y de arquitectura</h1>
+                <h1 class="en">Documentary and architectural photographer and filmmaker</h1>
+            </div>
+
+            <section id="documental">
+                <div class="section-header"><h2>Documental</h2></div>
+                <div class="editorial-grid" id="grid-documental"></div>
+            </section>
+
+            <section id="arquitectura">
+                <div class="section-header"><h2>Arquitectura</h2></div>
+                <div class="editorial-grid" id="grid-arquitectura"></div>
+            </section>
+
+            <section id="exposiciones">
+                <div class="section-header"><h2>Exposiciones</h2></div>
+                <div class="editorial-grid" id="grid-exposiciones"></div>
+            </section>
+
+            <section id="audiovisual">
+                <div class="section-header"><h2>Audiovisual</h2></div>
+                <div class="editorial-grid" id="grid-audiovisual"></div>
+            </section>
+
+            <section id="productos">
+                <div class="section-header"><h2>Productos</h2></div>
+                <div class="editorial-grid" id="grid-productos"></div>
+            </section>
+        </div>
+
+        <div id="info-view" class="view-content">
+            <span class="back-link" onclick="goToHome()">← Volver</span>
+            <div class="info-layout">
+                <div class="info-image">
+                    <img src="https://i.postimg.cc/nLTjKqP2/pp-3.jpg" alt="Pedro Pablo Stevenson">
+                </div>
+                <div class="project-header">
+                    <h3>Pedro Pablo Stevenson</h3>
+                    <div class="text-bilingual">
+                        <div>
+                            <p>Fotógrafo y realizador audiovisual. Arquitecto y master en arquitectura de la PUC. Ha enfocado su desarrollo profesional en el área documental y desarrollo editorial de proyectos a través de la fotografía.</p>
+                        </div>
+                        <div class="en">
+                            <p>Photographer and filmmaker. Architect and M.Arch from PUC. He has focused his professional development on the documentary field and editorial project development through photography.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="contacto-view" class="view-content">
+            <span class="back-link" onclick="goToHome()">← Volver</span>
+            <div class="project-header">
+                <h3>Contacto</h3>
+                <div class="text-bilingual">
+                    <div>
+                        <p>Disponible para encargos y colaboraciones presenciales en Paris, Francia.</p>
+                        <a href="mailto:pedrostevensonv@gmail.com" class="contact-link">pedrostevensonv@gmail.com</a>
+                        <p style="margin-top: 20px;">Instagram: <a href="https://www.instagram.com/epepevets/" target="_blank" class="insta-link">@epepevets</a></p>
+                    </div>
+                    <div class="en">
+                        <p>Available for on-site assignments and collaborations in Paris, France.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="project-view" class="view-content">
+            <span class="back-link" onclick="closeProject()">← Proyectos</span>
+            <div class="project-header">
+                <h3 id="project-title">Project Title</h3>
+                <div class="text-bilingual">
+                    <div><p id="project-desc-es"></p></div>
+                    <div><p id="project-desc-en" class="en"></p></div>
+                </div>
+            </div>
+            <div id="project-media-content"></div>
+        </div>
+    </main>
+
+    <script>
+        const projectsData = {
+            'aruba': { 
+                category: 'documental', 
+                title: 'Suburbio en Aruba', 
+                thumb: 'https://i.postimg.cc/yxZXDq5h/20.jpg', 
+                type: 'slider', 
+                images: [
+                    'https://i.postimg.cc/QCTkFLP0/18.jpg',
+                    'https://i.postimg.cc/Y0WfvcVz/19.jpg',
+                    'https://i.postimg.cc/yxZXDq5h/20.jpg',
+                    'https://i.postimg.cc/NFH7KhVz/21.jpg',
+                    'https://i.postimg.cc/Wzk6dRKK/22.jpg'
+                ], 
+                descEs: 'Resgistros de un suburbio norteamericano en el caribe. Paisajes naturales y distópicos.', 
+                descEn: 'Records of a North American suburb in the Caribbean. Natural and dystopian landscapes.' 
+            },
+            'mexico': { 
+                category: 'documental', 
+                title: 'México', 
+                thumb: 'https://i.postimg.cc/8PNkt2Bk/93.jpg', 
+                type: 'slider', 
+                images: [
+                    'https://i.postimg.cc/t4gqHFMm/100.jpg',
+                    'https://i.postimg.cc/QxhN02kZ/91.jpg',
+                    'https://i.postimg.cc/L624NcBS/92.jpg',
+                    'https://i.postimg.cc/8PNkt2Bk/93.jpg',
+                    'https://i.postimg.cc/sDsfwk9r/94.jpg',
+                    'https://i.postimg.cc/m2BZ8vNQ/95.jpg',
+                    'https://i.postimg.cc/yYj15LvJ/96.jpg',
+                    'https://i.postimg.cc/xT5f76tJ/97.jpg',
+                    'https://i.postimg.cc/65cWSMY4/98.jpg',
+                    'https://i.postimg.cc/vHhYj03K/99.jpg',
+                    'https://i.postimg.cc/T32Sw6gQ/92.jpg',
+                    'https://i.postimg.cc/K8cVz2Bf/93.jpg'
+                ], 
+                descEs: 'Registros documentales de distintas ciudades y lugares de México. 2023 a 2025.', 
+                descEn: 'Documentary records of different cities and places in Mexico. 2023 to 2025.' 
+            },
+            'latam': {
+                category: 'documental',
+                title: 'Latinoamérica',
+                thumb: 'https://i.postimg.cc/gkfcVC7Z/33.jpg',
+                type: 'series',
+                descEs: 'Recopilación de archivos fotográficos y registros en distintos puntos del continente.',
+                descEn: 'Collection of photographic archives and records across different points of the continent.',
+                series: [
+                    {
+                        subtitle: 'Buenos Aires',
+                        images: [
+                            'https://i.postimg.cc/Fs2FyM6Y/32.jpg',
+                            'https://i.postimg.cc/gkfcVC7Z/33.jpg',
+                            'https://i.postimg.cc/X7TNfRPG/34.jpg',
+                            'https://i.postimg.cc/fT6WcGPY/35.jpg',
+                            'https://i.postimg.cc/MKhZ7CL5/36.jpg',
+                            'https://i.postimg.cc/6pnWYHsv/37.jpg'
+                        ]
+                    },
+                    {
+                        subtitle: 'Brasil',
+                        images: [
+                            'https://i.postimg.cc/6Qx3XkVP/23.jpg',
+                            'https://i.postimg.cc/N0vMc37h/24.jpg',
+                            'https://i.postimg.cc/VNP68x9T/25.jpg',
+                            'https://i.postimg.cc/hGRjBkbW/26.jpg',
+                            'https://i.postimg.cc/7Lr6kFMD/27.jpg',
+                            'https://i.postimg.cc/3wQRTsCT/28.jpg',
+                            'https://i.postimg.cc/g0bJWCqz/29.jpg',
+                            'https://i.postimg.cc/0NGN2Vcq/30.jpg',
+                            'https://i.postimg.cc/7L1LYKmD/31.jpg'
+                        ]
+                    },
+                    {
+                        subtitle: 'Patagonia norte. Chile',
+                        images: [
+                            'https://i.postimg.cc/ZR74C239/38.jpg',
+                            'https://i.postimg.cc/D0SFs6dq/39.jpg',
+                            'https://i.postimg.cc/85KNj9Wv/40.jpg',
+                            'https://i.postimg.cc/MTPqvNRX/41.jpg',
+                            'https://i.postimg.cc/wMnzkN00/42.jpg',
+                            'https://i.postimg.cc/BP5RSjWF/43.jpg',
+                            'https://i.postimg.cc/y3h21DqS/44.jpg',
+                            'https://i.postimg.cc/RJ12SWrT/45.jpg',
+                            'https://i.postimg.cc/G3fbr0dv/46.jpg',
+                            'https://i.postimg.cc/fWPMZ4Df/47.jpg',
+                            'https://i.postimg.cc/tRc9y0pt/48.jpg'
+                        ]
+                    },
+                    {
+                        subtitle: 'Playas',
+                        images: [
+                            'https://i.postimg.cc/mD5WbMfS/54.jpg',
+                            'https://i.postimg.cc/mD5WbMfw/55.jpg',
+                            'https://i.postimg.cc/cHbGsYyM/56.jpg',
+                            'https://i.postimg.cc/850g1WQR/57.jpg',
+                            'https://i.postimg.cc/kgbQwdgd/49.jpg',
+                            'https://i.postimg.cc/fR9c5hRN/50.jpg',
+                            'https://i.postimg.cc/JzkNKWz1/51.jpg',
+                            'https://i.postimg.cc/kgbQwdgJ/52.jpg',
+                            'https://i.postimg.cc/MpQ7t8pp/53.jpg'
+                        ]
+                    },
+                    {
+                        subtitle: 'Aquí',
+                        images: [
+                            'https://i.postimg.cc/kX8GpMKY/58.jpg',
+                            'https://i.postimg.cc/BQDbVZHw/59.jpg',
+                            'https://i.postimg.cc/65Rqm6nm/60.jpg'
+                        ]
+                    }
+                ]
+            },
+            'europa': {
+                category: 'documental',
+                title: 'Europa',
+                thumb: 'https://i.postimg.cc/G2GvRWfd/77.jpg',
+                type: 'series',
+                descEs: 'Recorridos por el continente europeo. Registros que contrastan el uso del color y la síntesis cromática del blanco y negro.',
+                descEn: 'Journeys through the European continent. Records that contrast the use of color and the chromatic synthesis of black and white.',
+                series: [
+                    {
+                        subtitle: 'Europa a color',
+                        images: [
+                            'https://i.postimg.cc/mrMP1QyT/81.jpg',
+                            'https://i.postimg.cc/fR13bHmt/82.jpg',
+                            'https://i.postimg.cc/YSgvL1zp/83.jpg',
+                            'https://i.postimg.cc/5tvXQwSN/84.jpg',
+                            'https://i.postimg.cc/W4rdqMw3/85.jpg',
+                            'https://i.postimg.cc/8CW7fhmj/86.jpg',
+                            'https://i.postimg.cc/R0fWJcLW/87.jpg',
+                            'https://i.postimg.cc/wBJ1RhQt/88.jpg',
+                            'https://i.postimg.cc/cJYvtQBg/89.jpg',
+                            'https://i.postimg.cc/bvbZSQ91/90.jpg'
+                        ]
+                    },
+                    {
+                        subtitle: 'Europa blanco y negro',
+                        images: [
+                            'https://i.postimg.cc/xCMLQw4w/69.jpg',
+                            'https://i.postimg.cc/rmx5TBP3/70.jpg',
+                            'https://i.postimg.cc/gJ83pC79/71.jpg',
+                            'https://i.postimg.cc/fLmYsGrF/72.jpg',
+                            'https://i.postimg.cc/G2GvRWf1/73.jpg',
+                            'https://i.postimg.cc/Y9YQ75PH/74.jpg',
+                            'https://i.postimg.cc/j5PyTp1T/75.jpg',
+                            'https://i.postimg.cc/FR30vM6m/76.jpg',
+                            'https://i.postimg.cc/G2GvRWfd/77.jpg',
+                            'https://i.postimg.cc/ZRp6mGQK/78.jpg',
+                            'https://i.postimg.cc/Vvwnk7yy/79.jpg',
+                            'https://i.postimg.cc/hvnTtCFR/80.jpg'
+                        ]
+                    }
+                ]
+            },
+            'personas': {
+                category: 'documental',
+                title: 'Personas',
+                thumb: 'https://i.postimg.cc/CMvrQDbD/107.jpg',
+                type: 'slider',
+                images: [
+                    'https://i.postimg.cc/L4yQbfjL/101.jpg',
+                    'https://i.postimg.cc/kMjYp8Wb/102.jpg',
+                    'https://i.postimg.cc/nVdSP7qm/103.jpg',
+                    'https://i.postimg.cc/7hQBJ8x8/106.jpg',
+                    'https://i.postimg.cc/CMvrQDbD/107.jpg',
+                    'https://i.postimg.cc/yYkp4dTF/108.jpg',
+                    'https://i.postimg.cc/v8P2N95q/109.jpg'
+                ],
+                descEs: '2014 a 2020',
+                descEn: '2014 to 2020'
+            },
+            'niteroi': { 
+                category: 'arquitectura', 
+                title: 'Niteroi y Coliumo', 
+                thumb: 'https://i.postimg.cc/SKYxCZZJ/1.jpg', 
+                type: 'slider', 
+                images: [
+                    'https://i.postimg.cc/SKYxCZZJ/1.jpg',
+                    'https://i.postimg.cc/bvSwk66S/2.jpg',
+                    'https://i.postimg.cc/zfHGKddy/3.jpg',
+                    'https://i.postimg.cc/GhP7hdd4/4.jpg',
+                    'https://i.postimg.cc/sgVnMqgj/5.jpg',
+                    'https://i.postimg.cc/J4364MMy/6.jpg'
+                ], 
+                descEs: 'Registros del Museo de Arte Contemporáneo Niteroi y Registros de la Casa Poli en Coliumo.', 
+                descEn: 'Records of the Niterói Contemporary Art Museum and Records of Casa Poli in Coliumo.' 
+            },
+            'conce': { 
+                category: 'arquitectura', 
+                title: 'Concepción', 
+                thumb: 'https://i.postimg.cc/Qxjgm5Gw/10.jpg', 
+                type: 'slider', 
+                images: [
+                    'https://i.postimg.cc/Qxjgm5Gw/10.jpg',
+                    'https://i.postimg.cc/fWcjYCF6/7.jpg',
+                    'https://i.postimg.cc/kX7Ns83w/8.jpg',
+                    'https://i.postimg.cc/xT9G5HDZ/9.jpg'
+                ], 
+                descEs: 'Registros en la ciudad de Concepción. 2016', 
+                descEn: 'Records in the city of Concepción. 2016' 
+            },
+            'tanume': {
+                category: 'arquitectura',
+                title: 'Tanumé y benedictinos',
+                thumb: 'https://i.postimg.cc/50cLCQmb/11.jpg',
+                type: 'slider',
+                images: [
+                    'https://i.postimg.cc/50cLCQmb/11.jpg',
+                    'https://i.postimg.cc/sXF7hGJ3/12.jpg',
+                    'https://i.postimg.cc/vH89fs5n/13.jpg',
+                    'https://i.postimg.cc/YqXFxsx9/14.jpg',
+                    'https://i.postimg.cc/xTsmP4Pc/15.jpg',
+                    'https://i.postimg.cc/YqXFxsxS/16.jpg'
+                ],
+                descEs: 'Registros realizados en el monasterio Benedictinos en la ciudad de Santiago de Chile y registros de los restos de la casona en la costa de Tanumé. 2016',
+                descEn: 'Records from the Benedictine Monastery in Santiago, Chile, and from the remains of the manor house on the Tanumé coast. 2016'
+            },
+            'pixeles': { 
+                category: 'exposiciones', 
+                title: 'Pixeles Podridos', 
+                thumb: 'https://i.postimg.cc/yYjfZR80/113.jpg', 
+                type: 'slider', 
+                images: [
+                    'https://i.postimg.cc/HszSyMkQ/110.jpg',
+                    'https://i.postimg.cc/vHhPVnZL/111.jpg',
+                    'https://i.postimg.cc/4NP89cxQ/112.jpg',
+                    'https://i.postimg.cc/yYjfZR80/113.jpg',
+                    'https://i.postimg.cc/L8sxBsJc/114.jpg',
+                    'https://i.postimg.cc/jSkZ8rf9/115.jpg',
+                    'https://i.postimg.cc/L80NyMfS/116.jpg',
+                    'https://i.postimg.cc/HkPBSC5W/117.jpg',
+                    'https://i.postimg.cc/g0X4QBqk/118.jpg',
+                    'https://i.postimg.cc/mrzVJ6Nt/119.jpg',
+                    'https://i.postimg.cc/ZqBj2DFB/120.jpg',
+                    'https://i.postimg.cc/CKBJX6HD/121.jpg'
+                ], 
+                descEs: 'Resgitro de la exposición Pixeles Podridos por las artistas Colomba Pino y Fernanda Urquiza. Realizada en la galería de arte Escrituras Experimentales, durante marzo del 2025.', 
+                descEn: 'Record of the Pixeles Podridos exhibition by artists Colomba Pino and Fernanda Urquiza. Held at the Escrituras Experimentales art gallery during March 2025.' 
+            },
+            'alpha': {
+                category: 'audiovisual',
+                title: 'Galería Alpha',
+                thumb: 'https://i.postimg.cc/hPzN1HLj/IMG-3620.jpg',
+                type: 'video',
+                videoEmbed: '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/401552918?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="ALPHA_Re edit"></iframe></div>',
+                descEs: 'Registro audiovisual para la galería alpha, realizada en la facultad de arquitectura, diseño de la Universidad Católica de Chile. 2018',
+                descEn: 'Audiovisual record for Gallery Alpha, held at the Faculty of Architecture and Design of the Catholic University of Chile. 2018'
+            },
+            'ferroviarias': {
+                category: 'audiovisual',
+                title: 'Narrativas Ferroviarias',
+                thumb: 'https://i.postimg.cc/CxJthSY9/Captura-de-pantalla-2026-01-31-a-la(s)-1-01-45-p-m.png',
+                type: 'video',
+                videoEmbed: '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1150856293?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Reimaginar el Paisaje Ferroviario"></iframe></div>',
+                descEs: 'Patrimonio Ferroviario de la Región del Maule, Chile.\nProyecto financiado por FONPAT regional (2022-2023) y FONDART de difusión (2023-2024).\nRegistro fotográfico de estaciones ferroviarias e inmuebles patrimoniales de la región y actividades comunitarias. Publicado en Reimaginar el Paisaje Ferroviario (2024), realización audiovisual y participación en exposición Material Rodante (2024).\nProyecto realizado desde Plegma Fotografía, junto a Vicente Fuenzalida',
+                descEn: 'Railway Heritage of the Maule Region, Chile.\nProject funded by regional FONPAT (2022-2023) and FONDART for dissemination (2023-2024).\nPhotographic record of railway stations and heritage buildings in the region and community activities. Published in Reimagining the Railway Landscape (2024), audiovisual production and participation in the Rolling Stock exhibition (2024).\nProject carried out from Plegma Fotografía, together with Vicente Fuenzalida'
+            },
+            'cn-gutierrez': {
+                category: 'audiovisual',
+                title: 'Copa CNG',
+                thumb: 'https://i.postimg.cc/PqSkR1Pw/Captura-de-pantalla-2026-02-03-a-la(s)-12-47-52-p-m.png',
+                type: 'video',
+                videoEmbed: '<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/405199165?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="CNG 2018"></iframe></div>',
+                descEs: 'Registro de las finales de la liga de ex alumnos del Colegio CVD "Copa Nestor Gutierrez". 2018',
+                descEn: 'Record of the finals of the CVD Alumni League "Copa Nestor Gutierrez". 2018'
+            },
+            'murphy': { 
+                category: 'productos', 
+                title: 'Murphy Joyas', 
+                thumb: 'https://i.postimg.cc/RFnsJCPw/123.jpg', 
+                type: 'slider', 
+                images: [
+                    'https://i.postimg.cc/6qJHrsSk/122.jpg',
+                    'https://i.postimg.cc/RFnsJCPw/123.jpg',
+                    'https://i.postimg.cc/x8Dsvr7M/124.jpg',
+                    'https://i.postimg.cc/C1fPnMvj/125.jpg',
+                    'https://i.postimg.cc/D0rx5jkR/126.jpg',
+                    'https://i.postimg.cc/fynHc4FK/127.jpg',
+                    'https://i.postimg.cc/J0NpK6Vf/128.jpg',
+                    'https://i.postimg.cc/Y06d8nB7/129.jpg',
+                    'https://i.postimg.cc/7h3KXsrv/130.jpg',
+                    'https://i.postimg.cc/XqfsxH6S/131.jpg'
+                ], 
+                descEs: 'Registro para Murphy Joyas. Actualmente residiendo en la Ciudad de México. Fotografías realizadas el año 2024. ', 
+                descEn: 'Record for Murphy Joyas. Currently residing in Mexico City. Photographs taken in 2024.' 
+            },
+            'bizkaia': {
+                category: 'productos',
+                title: 'Pan Bizkaia',
+                thumb: 'https://i.postimg.cc/fRDRHJmD/139.jpg',
+                type: 'slider',
+                images: [
+                    'https://i.postimg.cc/kgqgjBK7/138.jpg',
+                    'https://i.postimg.cc/fRDRHJmD/139.jpg',
+                    'https://i.postimg.cc/XY4Y2pdY/140.jpg',
+                    'https://i.postimg.cc/8zNzyjM5/141.jpg',
+                    'https://i.postimg.cc/52gNDbSb/142.jpg',
+                    'https://i.postimg.cc/13B5bsrR/143.jpg'
+                ],
+                descEs: 'Registro para la panadería Pan Bizkaia. Encargo dirigido por Natasha Urretaviscaya, panadera. 2021.',
+                descEn: 'Record for the Pan Bizkaia bakery. Commission directed by Natasha Urretaviscaya, baker. 2021.'
+            },
+            'nicole-cedric': {
+                category: 'productos',
+                title: 'Nicole & Cedric',
+                thumb: 'https://i.postimg.cc/TY963Q5G/134.jpg',
+                type: 'slider',
+                images: [
+                    'https://i.postimg.cc/FsZ4HGkh/132.jpg',
+                    'https://i.postimg.cc/FsZ4HGkN/133.jpg',
+                    'https://i.postimg.cc/TY963Q5G/134.jpg',
+                    'https://i.postimg.cc/FsZ4HGkv/135.jpg',
+                    'https://i.postimg.cc/jdXbSvnx/136.jpg',
+                    'https://i.postimg.cc/nhhtj7BN/137.jpg'
+                ],
+                descEs: 'Registro realizado para la chocolatería Nicole & Cedric, realizado el año 2021.',
+                descEn: 'Record made for the Nicole & Cedric chocolate shop, carried out in 2021.'
+            }
+        };
+
+        let sliderStates = {};
+
+        function enterSite() { document.getElementById('landing-page').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+        function goToHome() { switchView('home-view'); }
+        function switchView(id) { document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active-view')); document.getElementById(id).classList.add('active-view'); window.scrollTo(0,0); }
+        function scrollOrGoHome(id) { if(!document.getElementById('home-view').classList.contains('active-view')) switchView('home-view'); setTimeout(() => { const el = document.getElementById(id); if(el) window.scrollTo({top: el.offsetTop - 120, behavior: 'smooth'}); }, 100); }
+
+        function renderGrids() {
+            ['documental', 'arquitectura', 'exposiciones', 'audiovisual', 'productos'].forEach(cat => {
+                const grid = document.getElementById(`grid-${cat}`);
+                if(grid) grid.innerHTML = "";
+            });
+
+            Object.keys(projectsData).forEach(id => {
+                const p = projectsData[id];
+                const grid = document.getElementById(`grid-${p.category}`);
+                if(grid) { grid.innerHTML += `<div class="item" onclick="openProject('${id}')"><div class="image-container"><img src="${p.thumb}" loading="lazy"></div><p class="caption">${p.title}</p></div>`; }
+            });
+        }
+
+        function openProject(id) {
+            const p = projectsData[id];
+            document.getElementById('project-title').innerText = p.title;
+            document.getElementById('project-desc-es').innerText = p.descEs || "";
+            document.getElementById('project-desc-en').innerText = p.descEn || "";
+            const content = document.getElementById('project-media-content');
+            content.innerHTML = "";
+            if(p.type === 'slider') {
+                createSlider(content, "main", p.images);
+            } else if(p.type === 'series') {
+                p.series.forEach((s, i) => {
+                    content.innerHTML += `<h4 class="series-subtitle">${s.subtitle}</h4>`;
+                    createSlider(content, `s-${i}`, s.images);
+                });
+            } else if(p.type === 'video') {
+                const vWrap = document.createElement('div');
+                vWrap.className = 'video-wrapper';
+                vWrap.innerHTML = p.videoEmbed;
+                content.appendChild(vWrap);
+            }
+            switchView('project-view');
+        }
+
+        function createSlider(parent, sid, imgs) {
+            const container = document.createElement('div'); container.className = 'slider-container';
+            const wrap = document.createElement('div'); wrap.className = 'slider-wrapper';
+            wrap.innerHTML = `<div class="slider-track" id="tr-${sid}">${imgs.map(img => `<div class="slide"><img src="${img}" loading="lazy"></div>`).join('')}</div>`;
+            const ui = document.createElement('div'); ui.className = 'slider-ui';
+            ui.innerHTML = `<button class="slider-btn" onclick="moveSlide('${sid}', -1)">Anterior</button><div class="slider-counter"><span id="c-${sid}">1</span> / ${imgs.length}</div><button class="slider-btn" onclick="moveSlide('${sid}', 1)">Siguiente</button>`;
+            container.appendChild(wrap); container.appendChild(ui); parent.appendChild(container);
+            sliderStates[sid] = { curr: 0, total: imgs.length };
+        }
+
+        window.moveSlide = (sid, dir) => {
+            const s = sliderStates[sid]; if(!s) return;
+            s.curr = Math.max(0, Math.min(s.total - 1, s.curr + dir));
+            document.getElementById(`tr-${sid}`).style.transform = `translateX(-${s.curr * 100}%)`;
+            document.getElementById(`c-${sid}`).innerText = s.curr + 1;
+        };
+
+        function closeProject() { goToHome(); }
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if(window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        window.onload = () => {
+            renderGrids();
+            if (!document.getElementById('landing-page').classList.contains('hidden')) document.body.style.overflow = 'hidden';
+        };
+    </script>
+</body>
+</html>
